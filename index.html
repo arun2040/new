@@ -1,0 +1,266 @@
+<html lang="en">
+    <script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script>
+    <script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script>
+    <script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>JIOTV</title>
+        <link rel="shortcut icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/5/52/JioTV_logo.png">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: black;
+            }
+
+            .channels {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 20px;
+            }
+
+            .channel {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+
+            .channel:hover {
+                transform: translateY(-5px);
+            }
+
+            .channel img {
+                width: 150px;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .channel-info {
+                text-align: center;
+            }
+
+            .channel-info h2 {
+                margin: 0;
+                font-size: 1.5em;
+                color: #333;
+            }
+
+            .channel-info p {
+                margin: 5px 0;
+                color: #666;
+            }
+
+            .channel-info a {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .channel-info a:hover {
+                background-color: #0056b3;
+            }
+
+            .filter {
+                margin-bottom: 20px;
+            }
+
+            .filter select {
+                padding: 8px;
+                font-size: 1em;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                margin-right: 10px;
+            }
+
+            #jtvh1 {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            #jtvh1 img {
+                max-width: 200px;
+                height: 100px;
+            }
+
+            #userButtons {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            #userButtons button {
+                padding: 10px 20px;
+                font-size: 1em;
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            #userButtons button:hover {
+                background-color: #0056b3;
+            }
+
+            #searchWrapper {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            #searchBar {
+                padding: 8px;
+                font-size: 1em;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                width: 300px;
+            }
+        </style>
+        <script bis_use="true" type="text/javascript" charset="utf-8" data-bis-config="[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;]" src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/../executers/vi-tr.js"></script>
+        <style type="text/css" data-asas-style="">
+            body, div, a, p, span {
+                user-select: text !important;
+            }
+
+            p, h1, h2, h3, h4, h5, h6 {
+                cursor: auto;
+                user-select: text !important;
+            }
+
+            ::selection {
+                background-color: #338FFF !important;
+                color: #fff !important;
+            }
+        </style>
+        <style type="text/css" data-asas-style="">
+            body, div, a, p, span {
+                user-select: text !important;
+            }
+
+            p, h1, h2, h3, h4, h5, h6 {
+                cursor: auto;
+                user-select: text !important;
+            }
+
+            ::selection {
+                background-color: #338FFF !important;
+                color: #fff !important;
+            }
+        </style>
+    </head>
+    <script type='text/javascript' src='//eltontry.com/09/f1/e9/09f1e956c711aea6a898d5abbb78d092.js'></script>
+    <body __processed_28ad5531-05c4-4831-b9c6-16534014f339__="true" bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6ImVwcGlvY2VtaG1ubGJoanBsY2drb2ZjaWllZ29tY29uIiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCIsIlBJTlRFUkVTVCI6ImRpc2FibGVkIiwiSU5TVEFHUkFNIjoiZGlzYWJsZWQiLCJMSU5LRURJTiI6ImRpc2FibGVkIiwiQ09ORklHIjoiZGlzYWJsZWQifSwidmVyc2lvbiI6IjIuMC4xNSIsInNjb3JlIjoyMDAxNX1d">
+        <center>
+            <header>
+                <div id="jtvh1" bis_skin_checked="1">
+                    <img src="https://i.ibb.co/RTwR8d8/jtv-plus-TMa-GGk6-N0.png" alt="JIOTV">
+                </div>
+                <div id="userButtons" bis_skin_checked="1"></div>
+            </header>
+            <br>
+            <div id="searchWrapper" bis_skin_checked="1">
+                <input type="text" name="searchBar" id="searchBar" placeholder="Search ...">
+            </div>
+            <div class="filter" bis_skin_checked="1">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="">All</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Gujarati">Gujarati</option>
+                    <option value="Odia">Odia</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Bhojpuri">Bhojpuri</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Assamese">Assamese</option>
+                    <option value="Nepali">Nepali</option>
+                    <option value="French">French</option>
+                </select>
+                <label for="type">Type:</label>
+                <select id="type">
+                    <option value="">All</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Movies">Movies</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Infotainment">Infotainment</option>
+                    <option value="News">News</option>
+                    <option value="Music">Music</option>
+                    <option value="Devotional">Devotional</option>
+                    <option value="Business">Business</option>
+                    <option value="Educational">Educational</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="JioDarshan">JioDarshan</option>
+                </select>
+            </div>
+        </center>
+        <div class="channels" bis_skin_checked="1">
+            <div class="channel" data-language="Hindi" data-type="Movies" bis_skin_checked="1" style="display: block;">
+                <img src="https://jiotvimages.cdn.jio.com/dare_images/images/Zee_Cinema.png" alt="Zee Cinema Logo">
+                <div class="channel-info" bis_skin_checked="1">
+                    <h2>Zee Cinema</h2>
+                    <p>Language: Hindi</p>
+                    <p>Type: Movies</p>
+                    <a href="player.php?id=484" ;cid=Zee_Cinema " target="">Watch Now</a></div></div><div class=" channel " data-language=" Hindi " data-type=" Entertainment " bis_skin_checked=" 1 " style=" display: block;"><img src=" https://jiotvimages.cdn.jio.com/dare_images/images/Enterr_10.png " alt=" Enterr 10 Logo "><div class=" channel-info " bis_skin_checked=" 1 "><h2>Enterr 10</h2><p>Language: Hindi</p><p>Type: Entertainment</p><a href=" player.php?id=485 ";cid=Enterr_10" target="">Watch Now</a>
+                </div>
+            </div>
+        </div>
+           
+<script>
+    document.addEventListener("DOMContentLoaded ", function() {
+        const languageSelect = document.getElementById("language ");
+        const typeSelect = document.getElementById("type ");
+        const searchBar = document.getElementById("searchBar ");
+        const channels = document.querySelectorAll(".channel ");
+
+        languageSelect.addEventListener("change ", filterChannels);
+        typeSelect.addEventListener("change ", filterChannels);
+        searchBar.addEventListener("input ", filterChannels);
+
+        function filterChannels() {
+            const selectedLanguage = languageSelect.value;
+            const selectedType = typeSelect.value;
+            const searchTerm = searchBar.value.toLowerCase();
+
+            channels.forEach(function(channel) {
+                const channelLanguage = channel.getAttribute("data-language ");
+                const channelType = channel.getAttribute("data-type ");
+                const channelName = channel.querySelector(".channel-info h2 ").textContent.toLowerCase();
+
+                if ((selectedLanguage === "" || channelLanguage === selectedLanguage) &&
+                    (selectedType === "" || channelType === selectedType) &&
+                    (searchTerm === "" || channelName.includes(searchTerm))) {
+                    channel.style.display = "block ";
+                } else {
+                    channel.style.display = "none ";
+                }
+            });
+        }
+    });
+</script>
+
+
+
+</body></html>
